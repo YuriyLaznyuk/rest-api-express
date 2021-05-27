@@ -1,0 +1,46 @@
+h1{
+    color:blue;
+    text-align: center;
+}
+form[name='userForm']{
+    width: 300px;
+    border: 2px solid;
+    margin: 10px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+input,label{
+    cursor: pointer;
+    margin: 2px;
+}
+input[type=submit]{
+    width: 100px;
+    margin: 5px auto;
+}
+table{
+    width: 60%;
+    margin: 10px auto;
+    border: 1px solid;
+    table-layout: fixed;
+}
+tr,th,td{
+    border: 1px solid;
+}
+.head{
+    background-color: #b1dfbb;
+}
+.col{
+    background-color: #8fd19e;
+}
+.td_btn{
+    text-align: center;
+
+}
+.td_btn button{
+    cursor: pointer;
+}
+.list{
+    background-color: rgba(179, 183, 187, 0.4);
+}
