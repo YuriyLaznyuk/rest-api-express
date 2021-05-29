@@ -1,39 +1,18 @@
-let btnReset = document.getElementById('reset');
-let tbody = document.getElementById('tbody');
-let list = "";
+const btnReset = document.getElementById('reset');
+const tbody = document.getElementById('tbody');
 const form = document.forms["userForm"];
+
+// reset form
+function reset() {
+    form.elements['name'].value = '';
+    form.elements['level'].value = '';
+    form.elements["id"].value = 0;
+}
 
 btnReset.addEventListener('click', (e) => {
     e.preventDefault();
     reset();
 });
-
-// render row
-function row(i) {
-    return (
-        `<tr class="list" id=${i.id}>
-<td>${i.id}</td>
-<td>${i.name}</td>
-<td>${i.level}</td>
-<td class="td_btn">
-<button data-id=${i.id}
- onclick="getUserId(this.dataset.id)">
-update</button>
-<button class="del" 
-onclick="deleteUsers(this.dataset.id)" 
-data-id=${i.id}>delete</button>
-</td>
-</tr>`
-    );
-
-}
-
-function getUsers() {
-    fetch("/api/users").then(res => res.json()).then(json => {
-        json.forEach(i => tbody.innerHTML += row(i));
-    });
-
-}
 
 function getUserId(id) {
     fetch("/api/users/" + id, {
@@ -47,9 +26,7 @@ function getUserId(id) {
         form.elements['id'].value = json.id;
         form.elements['name'].value = json.name;
         form.elements['level'].value = json.level;
-
-    });
-
+    }).catch((err) => console.log(err));
 }
 
 function deleteUsers(id) {
@@ -59,9 +36,44 @@ function deleteUsers(id) {
     }).then(res => {
         if (res.ok) {
             document.getElementById(`${id}`).remove();
-
         }
-    });
+    }).catch((err) => console.log(err));
+}
+
+
+// render row
+function renderRow(item) {
+    const { id, name, level } = item;
+    return (
+        `<tr class="list" id=${id}>
+            <td>${id}</td>
+            <td>${name}</td>
+            <td>${level}</td>
+            <td class="td_btn">
+            
+            <button data-id=${id}
+                onclick="getUserId(this.dataset.id)"
+            >
+                Edit
+            </button>
+            <button 
+                onclick="deleteUsers(this.dataset.id)" 
+                data-id=${id}
+            >
+                Delete
+            </button>
+            </td>
+        </tr>`
+    );
+}
+
+function getUsers() {
+    fetch("/api/users")
+        .then(res => res.json())
+        .then(json => {
+            json.forEach(i => tbody.innerHTML += renderRow(i));
+        })
+        .catch((err) => console.log(err));
 }
 
 function createUsers(userName, userLevel) {
@@ -76,14 +88,12 @@ function createUsers(userName, userLevel) {
         })
     }).then(res => {
         if (res.ok) {
-
             return res.json();
         }
     }).then(json => {
-
-        tbody.innerHTML += row(json);
+        tbody.innerHTML += renderRow(json);
         reset();
-    });
+    }).catch((err) => console.log(err));
 }
 
 function updateUser(userId, userName, userLevel) {
@@ -92,14 +102,11 @@ function updateUser(userId, userName, userLevel) {
         headers: {
             "Content-Type": "application/json; charset=utf-8"
         },
-        body: JSON.stringify(
-            {
-                id: userId,
-                name: userName,
-                level: userLevel
-            }
-        )
-
+        body: JSON.stringify({
+            id: userId,
+            name: userName,
+            level: userLevel
+        })
     }).then(res => {
         if (res.ok) {
             return res.json();
@@ -107,30 +114,19 @@ function updateUser(userId, userName, userLevel) {
     }).then(json => {
         reset();
      document.getElementById(`${userId}`)
-         .innerHTML=row(json);
-
-    });
-
-}
-
-// reset form
-function reset() {
-    form.elements['name'].value = '';
-    form.elements['level'].value = '';
-    form.elements["id"].value = 0;
-
+         .innerHTML=renderRow(json);
+    }).catch((err) => console.log(err));
 }
 
 // submit form
 form.addEventListener('submit', e => {
-
     e.preventDefault();
     let id = form.elements['id'].value;
     let name = form.elements['name'].value;
     let level = form.elements['level'].value;
-    (id == 0) ?
-    createUsers(name, level)
-    : updateUser(id, name, level);
+    (id == 0)
+        ? createUsers(name, level)
+        : updateUser(id, name, level);
 });
 
 getUsers();
