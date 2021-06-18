@@ -4,6 +4,7 @@ const app = express();
 const filePath = "users.json";
 const jsonParser = express.json();
 
+
 app.use(express.static(__dirname + "/public"));
 app.get('/', function (request, response) {
     response.render('/index.html');
