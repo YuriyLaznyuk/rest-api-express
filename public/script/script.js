@@ -1,6 +1,7 @@
 const btnReset = document.getElementById('reset');
 const tbody = document.getElementById('tbody');
 const form = document.forms["userForm"];
+const host=window.location.origin;
 
 // reset form
 function reset() {
@@ -15,7 +16,7 @@ btnReset.addEventListener('click', (e) => {
 });
 
 function getUserId(id) {
-    fetch("/api/users/" + id, {
+    fetch(host+"/api/users/" + id, {
         method: "GET",
         headers: { "Content-Type": "application/json; charset=utf-8"}
     }).then(res => {
@@ -30,7 +31,7 @@ function getUserId(id) {
 }
 
 function deleteUsers(id) {
-    fetch("/api/users/" + id, {
+    fetch(host+"/api/users/" + id, {
         method: "DELETE",
         headers: { "Content-Type": "application/json; charset=utf-8"}
     }).then(res => {
@@ -68,7 +69,7 @@ function renderRow(item) {
 }
 
 function getUsers() {
-    fetch("/api/users")
+    fetch(host+"/api/users")
         .then(res => res.json())
         .then(json => {
             json.forEach(i => tbody.innerHTML += renderRow(i));
@@ -77,7 +78,7 @@ function getUsers() {
 }
 
 function createUsers(userName, userLevel) {
-    fetch("/api/users", {
+    fetch(host+"/api/users", {
         method: "POST",
         headers: {
             "Content-Type": "application/json; charset=utf-8"
@@ -97,7 +98,7 @@ function createUsers(userName, userLevel) {
 }
 
 function updateUser(userId, userName, userLevel) {
-    fetch("/api/users", {
+    fetch(host+"/api/users", {
         method: "PUT",
         headers: {
             "Content-Type": "application/json; charset=utf-8"
