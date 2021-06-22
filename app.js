@@ -104,4 +104,4 @@ app.delete("/api/users/:id", function (req, res) {
         res.status(404).send();
     }
 });
-app.listen(7000, () => console.log('Port 7000 Ok'));
+app.listen(process.env.PORT || 7000, () => console.log('Port 7000 Ok'));
